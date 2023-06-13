@@ -122,7 +122,14 @@ namespace APIStandarts.Controllers
     {
       await this.mediator.Send(addCommentDto);
 
-      return Created($"api/articles/{Guid.NewGuid().ToString()}", addCommentDto); // 201;
+      return Created($"api/articles/{addCommentDto.ArticleId}/comments", addCommentDto); // 201;
+    }
+
+
+    [HttpGet("{id}/comments")]
+    public async Task<IActionResult> GetArticleComments([FromRoute] string id)
+    {
+      return Ok();
     }
 
 

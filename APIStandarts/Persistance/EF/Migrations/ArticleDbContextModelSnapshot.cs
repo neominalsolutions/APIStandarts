@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace APIStandarts.Migrations
+namespace APIStandarts.Persistance.EF.Migrations
 {
     [DbContext(typeof(ArticleDbContext))]
     partial class ArticleDbContextModelSnapshot : ModelSnapshot
@@ -40,7 +40,7 @@ namespace APIStandarts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Articles", (string)null);
                 });
 
             modelBuilder.Entity("APIStandarts.Domain.Entities.Comment", b =>
@@ -66,7 +66,7 @@ namespace APIStandarts.Migrations
 
                     b.HasIndex("ArticleId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("APIStandarts.Domain.Entities.Comment", b =>

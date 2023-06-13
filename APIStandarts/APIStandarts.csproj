@@ -22,8 +22,6 @@
     <Folder Include="Application\Features\Articles\Rate\" />
     <Folder Include="Persistance\AdoNet\" />
     <Folder Include="Persistance\Dapper\" />
-    <Folder Include="Persistance\EF\Configurations\" />
-    <Folder Include="Persistance\EF\Migrations\" />
     <Folder Include="Persistance\MongoDb\" />
     <Folder Include="Persistance\NHibernate\" />
   </ItemGroup>

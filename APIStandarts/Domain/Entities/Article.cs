@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using APIStandarts.Domain.Contracts;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIStandarts.Domain.Entities
 {
 
-  public class Article // Root Entity
+  public class Article:RootEntity // Root Entity
   {
 
-    public string Id { get; init; } // Nesnenin sadece contructor üzerinden Id set edilecek
+  
 
     public string Name { get; private set; } // required alanları private set tanımladık.
     public string? Description { get; set; }

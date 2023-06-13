@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace APIStandarts.Migrations
+namespace APIStandarts.Persistance.EF.Migrations
 {
     [DbContext(typeof(ArticleDbContext))]
     [Migration("20230613122004_ArticleDbInit")]

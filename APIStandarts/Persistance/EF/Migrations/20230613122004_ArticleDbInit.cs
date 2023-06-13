@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace APIStandarts.Migrations
+namespace APIStandarts.Persistance.EF.Migrations
 {
     public partial class ArticleDbInit : Migration
     {
