@@ -2,6 +2,7 @@
 using APIStandarts.Application.Features.Articles.Update;
 using APIStandarts.Domain.Entities;
 using APIStandarts.Dtos;
+using APIStandarts.Persistance.EF.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ namespace APIStandarts.Controllers
 
 
 
+
     //public ArticlesController(ArticleCreateService ac, ArticleUpdateService ap, IMediator mediator)
     //{
     //  this.ac = ac;
@@ -27,9 +29,9 @@ namespace APIStandarts.Controllers
     //  this.mediator = mediator;
     //}
 
-    public ArticlesController(IMediator mediator):base(mediator)
+    public ArticlesController(IMediator mediator) :base(mediator)
     {
-     
+
     }
 
     [HttpGet]
@@ -100,10 +102,10 @@ namespace APIStandarts.Controllers
       //this.ac.HandleAsync(articleCreateDto);
 
       // mediator send ile ilgili komutu çalıştırıyoruz.
-     var response = await this.mediator.Send(articleCreateDto);
+     var entityId = await this.mediator.Send(articleCreateDto);
 
       
-      return Created($"api/articles/{response}", response); // 201;
+      return Created($"api/articles/{entityId}", entityId); // 201;
     }
 
     [HttpPost("withComments")] // attribute routing
@@ -113,6 +115,16 @@ namespace APIStandarts.Controllers
 
       return Created($"api/articles/{Guid.NewGuid().ToString()}", articleCreateDto); // 201;
     }
+
+
+    [HttpPost("addComments")] // attribute routing
+    public async Task<IActionResult> AddComments([FromBody] AddCommentDto addCommentDto)
+    {
+      await this.mediator.Send(addCommentDto);
+
+      return Created($"api/articles/{Guid.NewGuid().ToString()}", addCommentDto); // 201;
+    }
+
 
     // api/articles/1 {id:1,name:'makale2'}
     [HttpPut("{id}")]

@@ -11,6 +11,11 @@
 
     public DateTime CreatedAt { get; init; }
 
+    //public string ArticleId { get; set; }
+
+    //public Article Article { get; set; }
+
+
 
 
     // create new instance işlemleri için.

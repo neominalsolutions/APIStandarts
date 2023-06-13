@@ -1,6 +1,8 @@
 using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
 using APIStandarts.DIServices;
+using APIStandarts.Persistance.EF.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,11 @@ builder.Services.AddScoped<ScopeService>();
 // Request Driven iþlemler, API to API,  Data Ýþlemleri, IO iþlemleri Scoped (UnManagement Resources)
 
 builder.Services.AddSingleton<SingletonService>();
+
+builder.Services.AddDbContext<ArticleDbContext>(opt =>
+{
+  opt.UseSqlServer(builder.Configuration.GetConnectionString("ArticleConn"));
+});
 
 
 //builder.Services.AddScoped<ArticleCreateService>();

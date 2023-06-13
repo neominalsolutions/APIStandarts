@@ -6,6 +6,8 @@ namespace APIStandarts.Dtos
   public class ArticleCreateDto:IRequest<string>
   {
     public string Name { get; set; }
+    public string AuthorId { get; set; }
+
 
   }
 }

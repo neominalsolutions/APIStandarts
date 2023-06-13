@@ -1,11 +1,19 @@
-﻿namespace APIStandarts.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace APIStandarts.Domain.Entities
 {
+
   public class Article // Root Entity
   {
+
     public string Id { get; init; } // Nesnenin sadece contructor üzerinden Id set edilecek
+
     public string Name { get; private set; } // required alanları private set tanımladık.
     public string? Description { get; set; }
     public string AuthorId { get; private set; }
+
+    // navigation property
 
     private List<Comment> _comments = new List<Comment>();
     public IReadOnlyCollection<Comment> Comments => _comments; // Commentlere direk dışarıdan müdahale edilmesin
@@ -15,6 +23,13 @@
     public Article(string name, string authorId)
     {
       Id = Guid.NewGuid().ToString();
+      this.SetName(name);
+
+      if (string.IsNullOrEmpty(authorId))
+      {
+        throw new Exception("Makale yazarını seçmediniz");
+      }
+
       this.Name = name;
       this.AuthorId = authorId;
 
@@ -29,6 +44,8 @@
     {
       var comment = new Comment(commentText, userId);
       _comments.Add(comment);
+
+      // article, Comments
 
     }
 
