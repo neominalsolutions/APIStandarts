@@ -1,6 +1,9 @@
-﻿namespace APIStandarts.Dtos
+﻿using MediatR;
+
+namespace APIStandarts.Dtos
 {
-  public class ArticleCreateDto
+  // IRequest interface Dtolar işaretleniyor.
+  public class ArticleCreateDto:IRequest<string>
   {
     public string Name { get; set; }
 

@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -20,9 +21,17 @@ builder.Services.AddScoped<ScopeService>();
 builder.Services.AddSingleton<SingletonService>();
 
 
-builder.Services.AddScoped<ArticleCreateService>();
-builder.Services.AddScoped<ArticleUpdateService>();
+//builder.Services.AddScoped<ArticleCreateService>();
+//builder.Services.AddScoped<ArticleUpdateService>();
 // Redis Singleton, Logger Service ELK Serilog Singleton, Elastic Search
+
+
+// MediaTR service registeration iþlemliyapýyoruz
+// Reflection ile Program dosyasýnýn bulunduðu dizindeki tüm mediator servislerini register.
+builder.Services.AddMediatR(config =>
+{
+  config.RegisterServicesFromAssemblyContaining<Program>();
+});
 
 
 

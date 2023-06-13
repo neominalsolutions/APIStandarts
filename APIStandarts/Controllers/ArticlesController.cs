@@ -1,6 +1,8 @@
 ﻿using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
+using APIStandarts.Domain.Entities;
 using APIStandarts.Dtos;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +13,23 @@ namespace APIStandarts.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class ArticlesController : ControllerBase
+  public class ArticlesController : RequestBaseController
   {
-    private readonly ArticleCreateService ac;
-    private readonly ArticleUpdateService ap;
+    //private readonly ArticleCreateService ac;
+    //private readonly ArticleUpdateService ap = new ArticleUpdateService();
 
-    public ArticlesController(ArticleCreateService ac, ArticleUpdateService ap)
+
+
+    //public ArticlesController(ArticleCreateService ac, ArticleUpdateService ap, IMediator mediator)
+    //{
+    //  this.ac = ac;
+    //  this.ap = ap;
+    //  this.mediator = mediator;
+    //}
+
+    public ArticlesController(IMediator mediator):base(mediator)
     {
-      this.ac = ac;
-      this.ap = ap;
+     
     }
 
     [HttpGet]
@@ -29,6 +39,9 @@ namespace APIStandarts.Controllers
 
     public IActionResult Get()
     {
+
+      //var a = new Article(name:"A-1",authorId:"1");
+      //a.Name = "sdsada";
 
       var model = new List<ArticleDto>
       {
@@ -82,11 +95,15 @@ namespace APIStandarts.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Exception
     // [Authorize(Roles = "Admin")] // 403
     // [Authorize] // 401
-    public IActionResult Create([FromBody] ArticleCreateDto articleCreateDto)
+    public async Task<IActionResult> Create([FromBody] ArticleCreateDto articleCreateDto)
     {
-      this.ac.HandleAsync(articleCreateDto);
+      //this.ac.HandleAsync(articleCreateDto);
+
+      // mediator send ile ilgili komutu çalıştırıyoruz.
+     var response = await this.mediator.Send(articleCreateDto);
+
       
-      return Created($"api/articles/{Guid.NewGuid().ToString()}", articleCreateDto); // 201;
+      return Created($"api/articles/{response}", response); // 201;
     }
 
     [HttpPost("withComments")] // attribute routing
@@ -99,7 +116,7 @@ namespace APIStandarts.Controllers
 
     // api/articles/1 {id:1,name:'makale2'}
     [HttpPut("{id}")]
-    public IActionResult Update([FromRoute]string id, [FromBody] ArticleUpdateDto articleUpdateDto)
+    public async Task<IActionResult> Update([FromRoute]string id, [FromBody] ArticleUpdateDto articleUpdateDto)
     {
 
 
@@ -108,7 +125,8 @@ namespace APIStandarts.Controllers
         return NotFound();
       }
 
-      this.ap.HandleAsync(articleUpdateDto);
+      //this.ap.HandleAsync(articleUpdateDto);
+      await this.mediator.Send(articleUpdateDto);
 
       // 204 yani apidan network üzerinden update işlemlerinde bir obje dönmek maliyetli olduğu için tercih edilmez.zaten client app son güncel update edilecek nesneye sahip.
       return NoContent();
