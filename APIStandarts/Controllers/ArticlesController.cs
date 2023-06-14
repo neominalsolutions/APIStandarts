@@ -1,7 +1,9 @@
 ﻿using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
 using APIStandarts.Domain.Entities;
+using APIStandarts.Domain.Repositories;
 using APIStandarts.Dtos;
+using APIStandarts.Infrastructure.Contracts;
 using APIStandarts.Persistance.EF.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -28,10 +30,13 @@ namespace APIStandarts.Controllers
     //  this.ap = ap;
     //  this.mediator = mediator;
     //}
+    private readonly IArticleRepository articleRepository;
+    private readonly IUnitOfWork<ArticleDbContext> unitOfWork;
 
-    public ArticlesController(IMediator mediator) :base(mediator)
+    public ArticlesController(IMediator mediator, IArticleRepository articleRepository, IUnitOfWork<ArticleDbContext>  unitOfWork) :base(mediator)
     {
-
+      this.articleRepository = articleRepository;
+      this.unitOfWork = unitOfWork;
     }
 
     [HttpGet]
@@ -109,9 +114,23 @@ namespace APIStandarts.Controllers
     }
 
     [HttpPost("withComments")] // attribute routing
-    public IActionResult CreatePostWithComments([FromBody] ArticleCreateDto articleCreateDto)
+    public async Task<IActionResult> CreatePostWithComments([FromBody] ArticleCreateDto articleCreateDto)
     {
-      
+
+      var article = new Article(name:articleCreateDto.Name, authorId:articleCreateDto.AuthorId);
+
+      foreach (var item in articleCreateDto.Comments)
+      {
+        article.AddComment(item.Text, item.Description);
+      }
+
+      await this.articleRepository.AddAsync(article);
+      await this.unitOfWork.SaveAsync();
+
+
+
+
+
 
       return Created($"api/articles/{Guid.NewGuid().ToString()}", articleCreateDto); // 201;
     }
@@ -175,8 +194,15 @@ namespace APIStandarts.Controllers
 
 
     [HttpDelete("{articleid}/comments/{commentid}")]
-    public IActionResult DeleteArticleComment([FromRoute] string articleid, string commentid)
+    public async Task<IActionResult> DeleteArticleComment([FromRoute] string articleid, string commentid)
     {
+      var article = await articleRepository.WithCommentsAsync(articleid);
+      article.DeleteComment(commentid);
+
+      await articleRepository.UpdateAsync(article);
+      await unitOfWork.SaveAsync();
+
+
       return NoContent();
     }
 

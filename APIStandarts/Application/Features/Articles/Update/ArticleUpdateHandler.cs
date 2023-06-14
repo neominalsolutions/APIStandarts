@@ -28,6 +28,8 @@ namespace APIStandarts.Application.Features.Articles.Update
       article.AddComment("Comment2", "1");
       article.AddComment("Comment3", "1");
 
+     
+
       await this.articleRepository.UpdateAsync(article); // state değişiminden sorumlu
       await this.unitOfWork.SaveAsync(); // save işleminden sorumlu, state değişikliğinin db yansımasından sorumlu.
       

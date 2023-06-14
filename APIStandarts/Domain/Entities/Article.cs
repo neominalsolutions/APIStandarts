@@ -50,6 +50,13 @@ namespace APIStandarts.Domain.Entities
 
     }
 
+    public void DeleteComment(string commentId)
+    {
+      var comment = _comments.Find(x=> x.Id == commentId);
+
+      _comments.Remove(comment); // Deleted State
+    }
+
     public void SetName(string name)
     {
       if (string.IsNullOrEmpty(name))
