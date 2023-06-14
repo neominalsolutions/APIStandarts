@@ -1,5 +1,6 @@
 ﻿using APIStandarts.Domain.Contracts;
 using APIStandarts.Domain.Entities;
+using APIStandarts.Domain.Views;
 using APIStandarts.Persistance.EF.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,19 @@ namespace APIStandarts.Persistance.EF.Contexts
     }
 
     public DbSet<Article> Articles { get; set; }
+    public DbSet<ArticleView> ArticleViews { get; set; } // View tablo gibi DbContext 
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       // Migration işlemlerinde buradaki kodlar uygulanıyor.
       modelBuilder.ApplyConfiguration(new ArticleConfiguration());
+
+      modelBuilder.Entity<ArticleView>(opt =>
+      {
+        opt.HasNoKey();
+        opt.ToView("ArticleCommentsView");
+      });
 
       base.OnModelCreating(modelBuilder);
     }

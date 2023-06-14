@@ -9,6 +9,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Mime;
 
@@ -30,13 +32,15 @@ namespace APIStandarts.Controllers
     //  this.ap = ap;
     //  this.mediator = mediator;
     //}
-    private readonly IArticleRepository articleRepository;
-    private readonly IUnitOfWork<ArticleDbContext> unitOfWork;
+    private readonly IArticleRepository articleRepository; // bunuda application katmanında çağıralım
+    private readonly IUnitOfWork<ArticleDbContext> unitOfWork; // bunuda application katmanında çağıralım
+    private readonly ArticleDbContext articleDbContext; // lütfen böyle bağlanmayalım
 
-    public ArticlesController(IMediator mediator, IArticleRepository articleRepository, IUnitOfWork<ArticleDbContext>  unitOfWork) :base(mediator)
+    public ArticlesController(IMediator mediator, IArticleRepository articleRepository, IUnitOfWork<ArticleDbContext>  unitOfWork, ArticleDbContext articleDbContext) :base(mediator)
     {
       this.articleRepository = articleRepository;
       this.unitOfWork = unitOfWork;
+      this.articleDbContext = articleDbContext;
     }
 
     [HttpGet]
@@ -228,6 +232,39 @@ namespace APIStandarts.Controllers
     [HttpGet("filters/v2")]
     public IActionResult GetArticles([FromQuery] FilterDto dto)
     {
+      return Ok();
+    }
+
+
+    [HttpGet("views")]
+    public IActionResult GetArticlesViews()
+    {
+
+      // 1. yöntem
+      var rapor = this.articleDbContext.ArticleViews.OrderByDescending(x=> x.ArticleName).ToList();
+      var rapor2 = this.articleDbContext.ArticleViews.FromSqlRaw("select * from ArticleCommentsView order by ArticleName desc").ToList();
+
+      //this.articleDbContext.Database.ExecuteSqlRaw()
+
+
+      return Ok();
+    }
+
+
+    [HttpGet("storeProcedures")]
+    public IActionResult GetProcudures()
+    {
+
+      // 1. yöntem
+      var rapor = this.articleDbContext.ArticleViews.OrderByDescending(x => x.ArticleName).ToList();
+      var sqlParamName = new SqlParameter("@name", System.Data.SqlDbType.NVarChar) { SqlValue = "Makale-1" };
+      var sqlParamDesc = new SqlParameter("@description", System.Data.SqlDbType.NVarChar) { SqlValue = "Description" };
+
+      var result = this.articleDbContext.Database.ExecuteSqlRaw("MakaleKayit @name,@description", sqlParamName, sqlParamDesc);
+
+
+
+
       return Ok();
     }
 
