@@ -1,42 +1,64 @@
 ﻿using APIStandarts.Domain.Contracts;
+using APIStandarts.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace APIStandarts.Infrastructure.Contracts
 {
-    // EF Multiple DbContext yapısını desteklediği için ve API uygulamaları daha sonradan Microservis uygulamalarına dönüşebileceği için Repositorylerde MultipleContext yapısına uygun yazarız
-    public abstract class EFRepositoryBase<TDbContext, TRootEntity> : IRepository<TRootEntity>
-      where TRootEntity : IRootEntity
-      where TDbContext : DbContext
+  // EF Multiple DbContext yapısını desteklediği için ve API uygulamaları daha sonradan Microservis uygulamalarına dönüşebileceği için Repositorylerde MultipleContext yapısına uygun yazarız
+  public abstract class EFRepositoryBase<TDbContext, TRootEntity> : IRepository<TRootEntity>
+    where TRootEntity : RootEntity
+    where TDbContext : DbContext
+  {
+    protected TDbContext dbContext; // db nesnesni
+    protected DbSet<TRootEntity> dbSet; // tablonun kendisi
+
+    public EFRepositoryBase(TDbContext context)
     {
-        public virtual Task AddAsync(TRootEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task DeleteAsync(string Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task<TRootEntity> Find(string Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task<IQueryable<TRootEntity>> Query()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task UpdateAsync(TRootEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task<IEnumerable<TRootEntity>> Where(Expression<Func<TRootEntity, bool>> lamda)
-        {
-            throw new NotImplementedException();
-        }
+      this.dbContext = context;
+      this.dbSet = this.dbContext.Set<TRootEntity>();
     }
+
+    public virtual async Task AddAsync(TRootEntity entity)
+    {
+      await dbSet.AddAsync(entity); // Added State
+    }
+
+    public virtual Task DeleteAsync(string Id)
+    {
+      var entity = dbSet.Find(Id);
+      if (entity is null)
+      {
+        throw new Exception("Entity bulunamadı");
+      }
+
+      dbSet.Remove(entity); // State Deleted oldu
+      return Task.CompletedTask;
+
+    }
+
+    public virtual async Task<TRootEntity> Find(string Id)
+    {
+      
+      return await dbSet.FindAsync(Id);
+
+    }
+
+    public virtual IQueryable<TRootEntity> Query()
+    {
+      return dbSet.AsNoTracking().AsQueryable(); // Sorgulama işlemleride kriter bazlı sorgulama için kullanılması gereken bir teknik. Performans takniği
+    }
+
+    public virtual Task UpdateAsync(TRootEntity entity)
+    {
+      dbSet.Update(entity); // Modified State 
+      return Task.CompletedTask;
+    }
+
+    public virtual async Task<IEnumerable<TRootEntity>> Where(Expression<Func<TRootEntity, bool>> lamda)
+    {
+      // sorgularken sorgu performansını düşürmemk için.
+      return await dbSet.AsNoTracking().Where(lamda).ToListAsync();
+    }
+  }
 }

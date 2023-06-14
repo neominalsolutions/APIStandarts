@@ -1,6 +1,9 @@
 using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
 using APIStandarts.DIServices;
+using APIStandarts.Domain.Repositories;
+using APIStandarts.Infrastructure.Contracts;
+using APIStandarts.Infrastructure.EF.Repositories;
 using APIStandarts.Persistance.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +30,8 @@ builder.Services.AddDbContext<ArticleDbContext>(opt =>
   opt.UseSqlServer(builder.Configuration.GetConnectionString("ArticleConn"));
 });
 
+builder.Services.AddScoped<IUnitOfWork<ArticleDbContext>, ArticleDbContextUnitOfWork>();
+builder.Services.AddScoped<IArticleRepository, EFArticleRepository>();
 
 //builder.Services.AddScoped<ArticleCreateService>();
 //builder.Services.AddScoped<ArticleUpdateService>();

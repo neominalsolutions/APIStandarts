@@ -10,16 +10,16 @@ namespace APIStandarts.Persistance.EF.Configurations
   {
     public void Configure(EntityTypeBuilder<Article> builder)
     {
-      builder.ToTable("Makale");
+      //builder.ToTable("Makale");
 
       builder.HasIndex(x => x.Name).IsUnique(); // Unique indeks tanımı
       builder.Property(x => x.Name).HasMaxLength(50);
       builder.Property(x => x.Description).HasMaxLength(2000);
-      builder.Property(x => x.AuthorId).HasColumnName("YazarId");
+      //builder.Property(x => x.AuthorId).HasColumnName("YazarId");
 
       builder.HasMany(x => x.Comments);
-      builder.Property(x => x.Name).HasColumnName("Başlık");
-      builder.Property(x => x.Description).HasColumnName("Açıklama");
+      //builder.Property(x => x.Name).HasColumnName("Başlık");
+      //builder.Property(x => x.Description).HasColumnName("Açıklama");
 
     }
   }

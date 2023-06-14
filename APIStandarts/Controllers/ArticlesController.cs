@@ -139,10 +139,13 @@ namespace APIStandarts.Controllers
     {
 
 
+
       if(id is null)
       {
         return NotFound();
       }
+
+      articleUpdateDto.ArticleId = id;
 
       //this.ap.HandleAsync(articleUpdateDto);
       await this.mediator.Send(articleUpdateDto);

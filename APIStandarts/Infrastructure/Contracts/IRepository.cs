@@ -15,7 +15,7 @@ namespace APIStandarts.Infrastructure.Contracts
     Task<TRootEntity> Find(string Id);
     Task<IEnumerable<TRootEntity>> Where(Expression<Func<TRootEntity, bool>> lamda);
 
-    Task<IQueryable<TRootEntity>> Query();
+  IQueryable<TRootEntity> Query();
 
 
   }

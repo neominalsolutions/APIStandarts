@@ -20,6 +20,7 @@
   <ItemGroup>
     <Folder Include="Application\Features\Articles\CreateWıthComments\" />
     <Folder Include="Application\Features\Articles\Rate\" />
+    <Folder Include="Infrastructure\AdoNet\" />
     <Folder Include="Persistance\AdoNet\" />
     <Folder Include="Persistance\Dapper\" />
     <Folder Include="Persistance\MongoDb\" />

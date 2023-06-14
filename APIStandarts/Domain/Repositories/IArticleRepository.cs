@@ -5,7 +5,7 @@ namespace APIStandarts.Domain.Repositories
 {
   public interface IArticleRepository:IRepository<Article>
   {
-    IEnumerable<Article> WithComments();
+    Task<Article> WithCommentsAsync(string articleId);
    
   }
 }

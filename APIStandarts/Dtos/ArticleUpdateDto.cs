@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace APIStandarts.Dtos
 {
@@ -8,7 +10,16 @@ namespace APIStandarts.Dtos
   // Create,Get Response Döndürürüz.
   public class ArticleUpdateDto:IRequest
   {
+    [JsonPropertyName("articleName")]
     public string Name { get; set; }
+
+
+    [JsonIgnore] // Swagger yansıtmak istemediğimiz prop için
+    public string? ArticleId { get; set; }
+
+
+   
+
 
   }
 
