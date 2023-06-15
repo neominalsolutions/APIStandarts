@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace APIStandarts.Core.Api.Middewares
 {
+
+ 
+
   public class ExceptionMiddleware : IMiddleware
   {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

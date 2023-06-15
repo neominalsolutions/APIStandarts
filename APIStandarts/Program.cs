@@ -7,50 +7,31 @@ using APIStandarts.DIServices;
 using APIStandarts.Domain.Repositories;
 using APIStandarts.Infrastructure.EF.Repositories;
 using APIStandarts.Persistance.EF.Contexts;
+using APIStandarts.ServiceRegistrations;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+#region APIServices
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(opt => opt.RegisterValidatorsFromAssemblyContaining<Program>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<TransientService>();
-// Validations, Sessions, AspNet Action Filter Handlers ,Factory Class Transient, 
+#endregion
 
-builder.Services.AddScoped<ScopeService>();
-// Request Driven iþlemler, API to API,  Data Ýþlemleri, IO iþlemleri Scoped (UnManagement Resources)
+#region AppServices
 
-builder.Services.AddSingleton<SingletonService>();
+builder.Services.RegisterDataServices(builder);
+builder.Services.RegisterDomainServices();
+builder.Services.RegisterApiServices();
+builder.Services.RegisterApplicationServices();
 
-builder.Services.AddDbContext<ArticleDbContext>(opt =>
-{
-  opt.UseSqlServer(builder.Configuration.GetConnectionString("ArticleConn"));
-});
-
-builder.Services.AddScoped<IUnitOfWork<ArticleDbContext>, ArticleDbContextUnitOfWork>();
-builder.Services.AddScoped<IArticleRepository, EFArticleRepository>();
-
-//builder.Services.AddScoped<ArticleCreateService>();
-//builder.Services.AddScoped<ArticleUpdateService>();
-// Redis Singleton, Logger Service ELK Serilog Singleton, Elastic Search
-
-
-// MediaTR service registeration iþlemliyapýyoruz
-// Reflection ile Program dosyasýnýn bulunduðu dizindeki tüm mediator servislerini register.
-builder.Services.AddMediatR(config =>
-{
-  config.RegisterServicesFromAssemblyContaining<Program>();
-});
-
-builder.Services.AddTransient<ExceptionMiddleware>(); // Middlware yapýlar request bazlý çalýþtýðý için transient olarak tercih edilir.
-builder.Services.AddTransient<ClientCredentialsMiddleware>();
-builder.Services.AddScoped<ClientCredentialCheckService>();
-
+#endregion
 
 
 var app = builder.Build(); // buradan sonraki kýsým middleware
@@ -63,24 +44,18 @@ var app = builder.Build(); // buradan sonraki kýsým middleware
 // app.Environment environment instance
 
 // Configure the HTTP request pipeline.
+
+#region Middlewares
+
 if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
 }
 
-//app.Use(async (context, next) =>
-//{
-//  await next();
-
-//});
-
-
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();  //    app.UseRouting(); kýsmýný yerine MapControllers geldi.
 
 /*
@@ -96,14 +71,8 @@ app.MapControllers();  //    app.UseRouting(); kýsmýný yerine MapControllers gel
 
 app.UseCustomException();
 app.UseClientCredentials();
-
-
-
 app.Run();
 
+#endregion
 
-//app.Use(async (context, next) =>
-//{
-//  await next();
 
-//});
