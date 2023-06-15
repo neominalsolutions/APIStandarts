@@ -7,8 +7,6 @@ using System.Xml.Linq;
 namespace APIStandarts.Application.Features.Articles.Create
 {
 
- 
-
   public class ArticleCreateValidator:AbstractValidator<ArticleCreateDto>
   {
     private readonly IArticleRepository articleRepository;

@@ -2,7 +2,7 @@
 using APIStandarts.Core.Api.Middewares;
 using APIStandarts.ServiceRegistrations;
 using FluentValidation.AspNetCore;
-
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,40 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddFluentValidation(opt => opt.RegisterValidatorsFromAssemblyContaining<Program>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(opt =>
+{
+
+  var securityScheme = new OpenApiSecurityScheme()
+  {
+    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+    Name = "Authorization",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.Http,
+    Scheme = "Bearer",
+    BearerFormat = "JWT" // Optional
+  };
+
+  var securityRequirement = new OpenApiSecurityRequirement
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "bearerAuth"
+            }
+        },
+        new string[] {}
+    }
+};
+
+  opt.AddSecurityDefinition("bearerAuth", securityScheme);
+  opt.AddSecurityRequirement(securityRequirement);
+});
+
 
 #endregion
 
@@ -48,6 +81,7 @@ if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+app.UseAuthentication(); // bu middleware ekleriz.
 app.UseAuthorization();
 app.MapControllers();  //    app.UseRouting(); kýsmýný yerine MapControllers geldi.
 

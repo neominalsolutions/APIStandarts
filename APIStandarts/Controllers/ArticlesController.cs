@@ -7,6 +7,7 @@ using APIStandarts.Domain.Repositories;
 using APIStandarts.Dtos;
 using APIStandarts.Persistance.EF.Contexts;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ using System.Net.Mime;
 namespace APIStandarts.Controllers
 {
     [Route("api/[controller]")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   [ApiController]
   public class ArticlesController : RequestBaseController
   {
@@ -45,7 +47,7 @@ namespace APIStandarts.Controllers
     }
 
     [HttpGet]
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = "Admin")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
 
@@ -151,9 +153,17 @@ namespace APIStandarts.Controllers
 
 
     [HttpGet("{id}/comments")]
-    public async Task<IActionResult> GetArticleComments([FromRoute] string id)
+    public async Task<IActionResult> GetArticleWithComments([FromRoute] string id)
     {
-      return Ok();
+
+      //var article = await articleRepository.WithCommentsAsync(articleid);
+
+      var request = new ArticleWithCommentRequestDto();
+      request.ArticleId = id;
+
+      var response = await this.mediator.Send(request);
+
+      return Ok(response);
     }
 
 
