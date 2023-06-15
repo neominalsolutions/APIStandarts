@@ -1,12 +1,12 @@
-﻿using APIStandarts.Domain.Repositories;
+﻿using APIStandarts.Core.Data;
+using APIStandarts.Domain.Repositories;
 using APIStandarts.Dtos;
-using APIStandarts.Infrastructure.Contracts;
 using APIStandarts.Persistance.EF.Contexts;
 using MediatR;
 
 namespace APIStandarts.Application.Features.Articles.Update
 {
-  public class ArticleUpdateHandler : IRequestHandler<ArticleUpdateDto>
+    public class ArticleUpdateHandler : IRequestHandler<ArticleUpdateDto>
   {
     private readonly IArticleRepository articleRepository;
     private readonly IUnitOfWork<ArticleDbContext> unitOfWork; 

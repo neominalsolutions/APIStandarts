@@ -1,4 +1,4 @@
-﻿using APIStandarts.Domain.Contracts;
+﻿using APIStandarts.Core.Domain;
 using APIStandarts.Domain.Entities;
 using APIStandarts.Domain.Views;
 using APIStandarts.Persistance.EF.Configurations;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APIStandarts.Persistance.EF.Contexts
 {
-  public class ArticleDbContext: DbContext
+    public class ArticleDbContext: DbContext
   {
 
     public ArticleDbContext(DbContextOptions<ArticleDbContext> opt):base(opt)

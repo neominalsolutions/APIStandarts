@@ -1,11 +1,11 @@
-﻿using APIStandarts.Domain.Contracts;
+﻿using APIStandarts.Core.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIStandarts.Domain.Entities
 {
 
-  public class Article:RootEntity // Root Entity
+    public class Article:RootEntity // Root Entity
   {
 
   

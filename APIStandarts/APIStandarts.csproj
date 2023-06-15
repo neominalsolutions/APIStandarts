@@ -20,6 +20,8 @@
   <ItemGroup>
     <Folder Include="Application\Features\Articles\CreateWıthComments\" />
     <Folder Include="Application\Features\Articles\Rate\" />
+    <Folder Include="Core\Api\ActionFilters\" />
+    <Folder Include="Core\Api\Attributes\" />
     <Folder Include="Infrastructure\AdoNet\" />
     <Folder Include="Persistance\AdoNet\" />
     <Folder Include="Persistance\Dapper\" />

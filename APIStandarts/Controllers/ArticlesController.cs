@@ -1,9 +1,10 @@
 ﻿using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
+using APIStandarts.Core.Api.Controllers;
+using APIStandarts.Core.Data;
 using APIStandarts.Domain.Entities;
 using APIStandarts.Domain.Repositories;
 using APIStandarts.Dtos;
-using APIStandarts.Infrastructure.Contracts;
 using APIStandarts.Persistance.EF.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ using System.Net.Mime;
 
 namespace APIStandarts.Controllers
 {
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
   [ApiController]
   public class ArticlesController : RequestBaseController
   {
@@ -265,6 +266,14 @@ namespace APIStandarts.Controllers
 
 
 
+      return Ok();
+    }
+
+
+    [HttpGet("withCredentials")]
+
+    public IActionResult ClientCredentialTest([FromHeader] string client_id, [FromHeader] string client_secret)
+    {
       return Ok();
     }
 

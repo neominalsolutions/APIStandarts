@@ -1,8 +1,10 @@
 using APIStandarts.Application.Features.Articles.Create;
 using APIStandarts.Application.Features.Articles.Update;
+using APIStandarts.Application.Services;
+using APIStandarts.Core.Api.Middewares;
+using APIStandarts.Core.Data;
 using APIStandarts.DIServices;
 using APIStandarts.Domain.Repositories;
-using APIStandarts.Infrastructure.Contracts;
 using APIStandarts.Infrastructure.EF.Repositories;
 using APIStandarts.Persistance.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,10 @@ builder.Services.AddMediatR(config =>
   config.RegisterServicesFromAssemblyContaining<Program>();
 });
 
+builder.Services.AddTransient<ExceptionMiddleware>(); // Middlware yapýlar request bazlý çalýþtýðý için transient olarak tercih edilir.
+builder.Services.AddTransient<ClientCredentialsMiddleware>();
+builder.Services.AddScoped<ClientCredentialCheckService>();
+
 
 
 var app = builder.Build(); // buradan sonraki kýsým middleware
@@ -63,6 +69,14 @@ if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 
+//app.Use(async (context, next) =>
+//{
+//  await next();
+
+//});
+
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -80,4 +94,16 @@ app.MapControllers();  //    app.UseRouting(); kýsmýný yerine MapControllers gel
  * 
  */
 
+app.UseCustomException();
+app.UseClientCredentials();
+
+
+
 app.Run();
+
+
+//app.Use(async (context, next) =>
+//{
+//  await next();
+
+//});

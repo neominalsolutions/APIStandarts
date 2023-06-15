@@ -1,12 +1,12 @@
-﻿using APIStandarts.Domain.Entities;
+﻿using APIStandarts.Core.Data;
+using APIStandarts.Domain.Entities;
 using APIStandarts.Domain.Repositories;
-using APIStandarts.Infrastructure.Contracts;
 using APIStandarts.Persistance.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIStandarts.Infrastructure.EF.Repositories
 {
-  public class EFArticleRepository: EFRepositoryBase<ArticleDbContext,Article>, IArticleRepository
+    public class EFArticleRepository: EFRepositoryBase<ArticleDbContext,Article>, IArticleRepository
   {
     public EFArticleRepository(ArticleDbContext context) : base(context)
     {
