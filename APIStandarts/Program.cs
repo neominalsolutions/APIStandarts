@@ -15,6 +15,7 @@ builder.Services.AddControllers().AddFluentValidation(opt => opt.RegisterValidat
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
+// Swagger Authorize olabilmek için bir ayar.
 builder.Services.AddSwaggerGen(opt =>
 {
 
