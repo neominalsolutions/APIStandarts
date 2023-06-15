@@ -1,15 +1,8 @@
-using APIStandarts.Application.Features.Articles.Create;
-using APIStandarts.Application.Features.Articles.Update;
-using APIStandarts.Application.Services;
+
 using APIStandarts.Core.Api.Middewares;
-using APIStandarts.Core.Data;
-using APIStandarts.DIServices;
-using APIStandarts.Domain.Repositories;
-using APIStandarts.Infrastructure.EF.Repositories;
-using APIStandarts.Persistance.EF.Contexts;
 using APIStandarts.ServiceRegistrations;
 using FluentValidation.AspNetCore;
-using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +63,7 @@ app.MapControllers();  //    app.UseRouting(); kýsmýný yerine MapControllers gel
  */
 
 app.UseCustomException();
-app.UseClientCredentials();
+//app.UseClientCredentials();
 app.Run();
 
 #endregion
